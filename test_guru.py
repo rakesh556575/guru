@@ -13,7 +13,7 @@ logging.basicConfig(filename="sample.log", level=logging.INFO,
 class ecom():
     def __init__(self,url):
         self.url=url
-        self.driver = webdriver.Chrome("C:\chromedriver.exe")
+        self.driver = webdriver.Chrome()
         self.driver.implicitly_wait(30)
 
 
