@@ -9,7 +9,7 @@ logging.basicConfig(filename="sample.log", level=logging.INFO,
                     format='%(asctime)s.%(msecs)03d %(levelname)s %(module)s - %(funcName)s: %(message)s',
                     datefmt="%Y-%m-%d %H:%M:%S")
 
-
+#test to see scm
 class ecom():
     def __init__(self,url):
         self.url=url
