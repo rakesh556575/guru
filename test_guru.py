@@ -13,7 +13,7 @@ logging.basicConfig(filename="sample.log", level=logging.INFO,
 class ecom():
     def __init__(self,url):
         self.url=url
-        self.driver = webdriver.Chrome()
+        self.driver = webdriver.Chrome("C:\chromedriver.exe")
         self.driver.implicitly_wait(30)
 
 
@@ -93,10 +93,27 @@ class ecom():
             return False
 
 
+    def verify_more_product(self):
+         mobile_page = self.driver.find_element_by_xpath("//*[@id='nav']/ol/li[1]/a")
+         mobile_page.click()
+         cart=self.driver.find_element_by_xpath("//button[@title='Add to Cart']").click()
+         quantity=self.driver.find_element_by_xpath("//input[@title='Qty']").send_keys("1000")
+         update=self.driver.find_element_by_xpath("//button[@title='Update']").click()
+         if "The maximum quantity allowed for purchase is 500" in self.driver.page_source:
+
+             return True
+         else:
+
+             return False
 
 
-#a1=ecom("http://live.guru99.com/index.php/")
-#a1.verify_cost()
+
+
+
+
+
+a1=ecom("http://live.guru99.com/index.php/")
+a1.verify_more_product()
 
 
 
@@ -130,3 +147,8 @@ def test_price():
     assert a1.verify_cost() == True
     a1.close()
 
+
+def test_no_products():
+    a1 = ecom("http://live.guru99.com/index.php/")
+    assert a1.verify_more_product() == True
+    a1.close()
