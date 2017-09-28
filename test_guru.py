@@ -13,7 +13,7 @@ logging.basicConfig(filename="sample.log", level=logging.INFO,
 class ecom():
     def __init__(self,url):
         self.url=url
-        self.driver = webdriver.Chrome("C:\chromedriver.exe")
+        self.driver = webdriver.Chrome()
         self.driver.implicitly_wait(30)
 
 
@@ -73,6 +73,7 @@ class ecom():
         mobile_page = self.driver.find_element_by_xpath("//*[@id='nav']/ol/li[1]/a")
         mobile_page.click()
         Mobile_names=self.driver.find_elements_by_xpath(".//a[@class='product-image']")
+        print(Mobile_names)
         Mobile_price = self.driver.find_elements_by_xpath("//div[@class='product-info']//div[@class='price-box']//span[@class='price']")
 
         self.names_price = []
@@ -106,14 +107,65 @@ class ecom():
 
              return False
 
+    def verify_pop_up(self):
+        flag=True
+        mobile_page = self.driver.find_element_by_xpath("//*[@id='nav']/ol/li[1]/a")
+        mobile_page.click()
+        Mobile_names = self.driver.find_elements_by_xpath(".//a[@class='product-image']")
+
+        names=[]
+        for i in Mobile_names[0:2]:
+            names.append(i.get_attribute("title"))
+
+        for i in names:
+
+            Mobile_page = self.driver.find_element_by_xpath(".//a[@title='{}']".format(str(i))).click()
+            compare=self.driver.find_element_by_xpath("//a[@class='link-compare']").click()
+            self.driver.back()
+            self.driver.back()
+        window_before = self.driver.window_handles[0]
+        compare=self.driver.find_element_by_xpath("//button[@title='Compare']").click()
+        window_after=self.driver.window_handles[1]
+
+        switch=self.driver.switch_to.window(window_after)
+
+        for i in names:
+            if i not in self.driver.page_source:
+                flag=False
+
+
+        if flag==True:
+
+            return True
+        else:
+
+            return False
 
 
 
 
 
 
-a1=ecom("http://live.guru99.com/index.php/")
-a1.verify_more_product()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#a1=ecom("http://live.guru99.com/index.php/")
+#a1.verify_pop_up()
 
 
 
@@ -152,3 +204,12 @@ def test_no_products():
     a1 = ecom("http://live.guru99.com/index.php/")
     assert a1.verify_more_product() == True
     a1.close()
+
+
+
+def test_pop_up():
+    a1 = ecom("http://live.guru99.com/index.php/")
+    assert a1.verify_pop_up() == True
+    a1.close()
+
+
