@@ -13,7 +13,7 @@ logging.basicConfig(filename="sample.log", level=logging.INFO,
 class ecom():
     def __init__(self,url):
         self.url=url
-        self.driver = webdriver.Chrome()
+        self.driver = webdriver.Chrome("C:\chromedriver.exe")
         self.driver.implicitly_wait(30)
 
 
@@ -143,6 +143,48 @@ class ecom():
 
 
 
+    def create_account(self,firstname,lastname,email,password):
+
+        self.firstname=firstname
+        self.lastname=lastname
+        self.email=email
+        self.password=password
+        Account_menu=self.driver.find_element_by_xpath("//a[@href='http://live.guru99.com/index.php/customer/account/']/span[2]").click()
+        My_account=self.driver.find_element_by_xpath("//a[@title='My Account']").click()
+        Create_account=self.driver.find_element_by_xpath("//a[@title='Create an Account']").click()
+        first_name=self.driver.find_element_by_xpath("//*[@id='firstname']").send_keys(self.firstname)
+        last_name=self.driver.find_element_by_xpath("//*[@id='lastname']").send_keys(self.lastname)
+        email=self.driver.find_element_by_xpath("//*[@id='email_address']").send_keys(self.email)
+        password=self.driver.find_element_by_xpath("//*[@id='password']").send_keys(self.password)
+        confirmation=self.driver.find_element_by_xpath("//*[@id='confirmation']").send_keys(self.password)
+        Register=self.driver.find_element_by_xpath("//div/button[@title='Register']").click()
+
+
+        if "There is already an account with this email address" in self.driver.page_source:
+            self.driver.back()
+            self.driver.back()
+            email=self.driver.find_element_by_xpath("//*[@id='email']").send_keys(self.email)
+            password=self.driver.find_element_by_xpath("//*[@id='pass']").send_keys(self.password)
+            self.driver.find_element_by_xpath("//*[@id='send2']").click()
+        elif "Thank you for registering with Main Website Store" not in  self.driver.page_source:
+            return False
+
+
+
+
+
+        tv_page=self.driver.find_element_by_xpath(".//a[@href='http://live.guru99.com/index.php/tv.html']").click()
+        wishlists=self.driver.find_element_by_xpath("//a[@class='link-wishlist']").click()
+
+
+        share_wishlist=self.driver.find_element_by_xpath("//div/button[@title='Share Wishlist']").click()
+        enter_email=self.driver.find_element_by_xpath("//*[@id='email_address']").send_keys(self.email)
+        share_list=self.driver.find_element_by_xpath("//div//button[@title='Share Wishlist']").click()
+        if "Your Wishlist has been shared" not in self.driver.page_source:
+            return False
+
+
+        return True
 
 
 
@@ -164,8 +206,15 @@ class ecom():
 
 
 
-#a1=ecom("http://live.guru99.com/index.php/")
-#a1.verify_pop_up()
+
+
+
+
+
+
+
+a1=ecom("http://live.guru99.com/index.php/")
+a1.create_account('Rakesh','singh','rakeshsingh556575@gmail.com',"tcet@123")
 
 
 
@@ -213,3 +262,7 @@ def test_pop_up():
     a1.close()
 
 
+def test_account_creation():
+    a1 = ecom("http://live.guru99.com/index.php/")
+    assert a1.create_account('Rakesh','singh','rakeshsingh556575@gmail.com',"tcet@123")==True
+    a1.close()
